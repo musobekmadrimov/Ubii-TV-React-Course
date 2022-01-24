@@ -28,7 +28,6 @@ export default function App() {
         "Running programming language on 3 billion devices around the world right now is Java!"
     }
   ]);
-
   const [filter, setFilter] = useState({ sort: "", query: "" });
 
   const sortedPosts = useMemo(() => {
