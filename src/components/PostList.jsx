@@ -1,7 +1,10 @@
 import React from "react";
 import PostItem from "./PostItem";
 
-export default function PostList({ posts, title }) {
+export default function PostList({ posts, title, remove }) {
+  if (!posts.length) {
+    return <div className="noPost"> No Post is found... </div>;
+  }
   return (
     <div>
       <h1
@@ -12,7 +15,14 @@ export default function PostList({ posts, title }) {
         {title}
       </h1>
       {posts.map((post, index) => {
-        return <PostItem number={index + 1} posts={post} key={index} />;
+        return (
+          <PostItem
+            remove={remove}
+            number={index + 1}
+            post={post}
+            key={index}
+          />
+        );
       })}
     </div>
   );

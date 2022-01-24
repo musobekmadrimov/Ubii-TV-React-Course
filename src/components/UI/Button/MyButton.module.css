@@ -5,4 +5,25 @@
   background: transparent;
   border: 1px solid teal;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.myBtn:hover {
+  color: #fff;
+  background: teal;
+}
+
+.myDangerBtn {
+  padding: 5px 15px;
+  color: rgb(255, 0, 64);
+  font-size: 14px;
+  background: transparent;
+  border: 1px solid rgb(255, 0, 64);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.myDangerBtn:hover {
+  color: #fff;
+  background: rgb(255, 0, 64);
 }
