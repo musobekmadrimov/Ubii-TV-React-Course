@@ -4,15 +4,21 @@ import MyInput from "./UI/Input/MyInput";
 
 export default function PostFilter({ filter, setFilter }) {
   return (
-    <div>
+    <div
+      style={{
+        marginBottom: "80px",
+        display: "flex",
+        flexDirection: "column",
+        width: "150px"
+      }}
+    >
       <MyInput
-        type="text"
         placeholder="Search..."
         value={filter.query}
         onChange={(e) => setFilter({ ...filter, query: e.target.value })}
       />
       <MySelect
-        defaultValue={"Sort by ..."}
+        defaultValue="Sort by ..."
         options={[
           { value: "title", name: "Sort by name" },
           { value: "body", name: "Sort by description" }

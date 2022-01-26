@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ClassCounter from "./components/ClassCounter";
 import Counter from "./components/Counter";
 import PostForm from "./components/PostForm";
@@ -6,49 +6,42 @@ import PostList from "./components/PostList";
 
 import "./styles/app.css";
 import PostFilter from "./components/PostFilter";
+import MyModal from "./components/UI/MyModal/MyModal";
+import MyButton from "./components/UI/Button/MyButton";
+import { usePosts } from "./hooks/usePosts";
+import PostService from "./API/PostService";
+import Loader from "./components/UI/Loader/Loader";
+import { getPageCount } from "./utils/pages";
 
 export default function App() {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: "JavaScript",
-      body:
-        "JavaScript is a programming language! JS is power!🔥 JS is future!💖"
-    },
-    {
-      id: 2,
-      title: "Python",
-      body:
-        "Programming PL Python is a number one programming language in the world now!"
-    },
-    {
-      id: 3,
-      title: "Java",
-      body:
-        "Running programming language on 3 billion devices around the world right now is Java!"
-    }
-  ]);
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: "", query: "" });
+  const [visible, setVisible] = useState(false);
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
 
-  const sortedPosts = useMemo(() => {
-    if (filter.sort) {
-      return [...posts].sort((a, b) =>
-        a[filter.sort].localeCompare(b[filter.sort])
-      );
-    }
-    return posts;
-  }, [filter.sort, posts]);
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
-  const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(filter.query) ||
-        post.body.toLowerCase().includes(filter.query)
-    );
-  }, [filter.query, sortedPosts]);
+  async function fetchPosts() {
+    setIsPostsLoading(true);
+    setTimeout(async () => {
+      const response = await PostService.getAll(limit, page);
+      setPosts(response.data);
+      const totalCount = response.headers["x-total-count"];
+
+      setTotalPages(getPageCount(totalCount, limit));
+      setIsPostsLoading(false);
+    }, 1000);
+  }
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
+    setVisible(false);
   };
 
   const removePost = (post) => {
@@ -58,15 +51,24 @@ export default function App() {
   return (
     <div className="App">
       <Counter />
-      <ClassCounter />
-      <PostForm create={createPost} />
       <hr style={{ margin: "15px 0" }} />
+      <ClassCounter />
+      <MyModal visible={visible} setVisible={setVisible}>
+        <PostForm create={createPost} />
+      </MyModal>
+
+      <hr style={{ margin: "15px 0" }} />
+      <MyButton onClick={() => setVisible(true)}>New Post</MyButton>
       <PostFilter {...{ filter, setFilter }} />
-      <PostList
-        remove={removePost}
-        posts={sortedAndSearchedPosts}
-        title="Table of Posts:"
-      />
+      {isPostsLoading ? (
+        <Loader />
+      ) : (
+        <PostList
+          remove={removePost}
+          posts={sortedAndSearchedPosts}
+          title="Table of Posts:"
+        />
+      )}
     </div>
   );
 }
