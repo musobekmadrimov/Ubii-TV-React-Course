@@ -41,7 +41,7 @@ export default function Posts() {
 
       setTotalPages(getPageCount(totalCount, limit));
       setIsPostsLoading(false);
-    }, 1000);
+    }, 500);
   }
 
   const createPost = (newPost) => {
@@ -70,7 +70,7 @@ export default function Posts() {
         <PostList
           remove={removePost}
           posts={sortedAndSearchedPosts}
-          title="Table of Posts:"
+          title="BMW News:"
         />
       )}
 

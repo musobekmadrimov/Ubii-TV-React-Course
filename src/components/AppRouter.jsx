@@ -4,6 +4,7 @@ import About from "../pages/About";
 import Posts from "../pages/Posts";
 import Error from "../pages/Error";
 import { Redirect } from "react-router-dom";
+import PostComments from "./PostComments";
 
 export default function AppRouter() {
   return (
@@ -11,13 +12,16 @@ export default function AppRouter() {
       <Route exact path="/posts">
         <Posts />
       </Route>
+      <Route exact path="/posts/:id">
+        <PostComments />
+      </Route>
       <Route path="/about">
         <About />
       </Route>
-      <Route path="/error">
-        <Error />
-      </Route>
-      <Redirect to="/error" />
+      {/* <Route path="*">
+        <Posts />
+      </Route> */}
+      <Redirect to="/posts" />
     </Switch>
   );
 }
