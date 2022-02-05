@@ -18,9 +18,6 @@ export default function AppRouter() {
       <Route path="/about">
         <About />
       </Route>
-      {/* <Route path="*">
-        <Posts />
-      </Route> */}
       <Redirect to="/posts" />
     </Switch>
   );
